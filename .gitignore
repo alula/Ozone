@@ -108,3 +108,5 @@ tools/*/
 package3
 
 stratosphere/test/
+
+compile_commands.json
