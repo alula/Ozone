@@ -163,6 +163,12 @@ namespace ams::fs {
             return s_fsp_ldr_service_object;
         }
 
+        #if defined(ATMOSPHERE_BOARD_NINTENDO_OUNCE)
+        sf::SharedPointer<fssrv::sf::IFileSystemProxy> GetFileSystemProxyServiceObjectFromHandle(os::NativeHandle fs_handle) {
+            ::fsInitializeFromFspSrvHandle(fs_handle, false, true);
+            return GetFileSystemProxyServiceObject();
+        }
+        #endif
     }
 
     void InitializeForHostTool() {
@@ -194,4 +200,15 @@ namespace ams::fs {
         #endif
     }
 
+    #if defined(ATMOSPHERE_BOARD_NINTENDO_OUNCE)
+    void InitializeForSystemWithHandle(os::NativeHandle fs_handle) {
+        #if defined(ATMOSPHERE_OS_HORIZON)
+        AMS_ABORT_UNLESS(!g_is_fsp_object_initialized);
+        AMS_ABORT_UNLESS(g_fsp_session_setting == FileSystemProxySessionSetting::SystemNormal);
+        g_fsp_session_setting = FileSystemProxySessionSetting::SystemNormal;
+
+        AMS_ABORT_UNLESS(impl::GetFileSystemProxyServiceObjectFromHandle(fs_handle) != nullptr);
+        #endif
+    }
+    #endif
 }

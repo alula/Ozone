@@ -23,4 +23,7 @@ namespace ams::fs {
     void InitializeForSystem();
     void InitializeWithMultiSessionForSystem();
 
+    #if defined(ATMOSPHERE_BOARD_NINTENDO_OUNCE)
+    void InitializeForSystemWithHandle(os::NativeHandle fs_handle);
+    #endif
 }
