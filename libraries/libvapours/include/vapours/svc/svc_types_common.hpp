@@ -119,6 +119,8 @@ namespace ams::svc {
         MemoryAttribute_DeviceShared     = (1 << 2),
         MemoryAttribute_Uncached         = (1 << 3),
         MemoryAttribute_PermissionLocked = (1 << 4),
+        MemoryAttribute_GpuSharable      = (1 << 5),
+        MemoryAttribute_GpuShared        = (1 << 6),
     };
 
     enum MemoryMapping : u32 {
