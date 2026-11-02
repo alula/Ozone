@@ -71,6 +71,7 @@ namespace ams {
                 }
             }
 
+            #if defined(ATMOSPHERE_BOARD_NINTENDO_NX)
             void *Allocate(size_t size) {
                 return lmem::AllocateFromExpHeap(g_server_heap_handle, size);
             }
@@ -80,6 +81,7 @@ namespace ams {
 
                 return lmem::FreeToExpHeap(g_server_heap_handle, p);
             }
+            #endif
 
             void InitializeHeap() {
                 /* Setup server allocator. */
@@ -112,16 +114,20 @@ namespace ams {
             /* Initialize our connection to sm. */
             R_ABORT_UNLESS(sm::Initialize());
 
+            #if defined(ATMOSPHERE_BOARD_NINTENDO_NX)
             /* Initialize fs. */
             fs::InitializeForSystem();
             fs::SetAllocator(ro::Allocate, ro::Deallocate);
             fs::SetEnabledAutoAbort(false);
+            #endif
 
             /* Initialize other services we need. */
             R_ABORT_UNLESS(setsysInitialize());
 
+            #if defined(ATMOSPHERE_BOARD_NINTENDO_NX)
             /* Mount the SD card. */
             R_ABORT_UNLESS(fs::MountSdCard("sdmc"));
+            #endif
 
             /* Verify that we can sanely execute. */
             ams::CheckApiVersion();

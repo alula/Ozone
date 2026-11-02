@@ -452,10 +452,12 @@ namespace ams::ro::impl {
                             ON_RESULT_FAILURE { std::memset(static_cast<u8 *>(mapped_memory) + 0x1000, 0, total_size - 0x1000); };
                         }
                     }
-                    
+
                     /* Apply patches to NRO. */
                     const ModuleId *module_id = nro_header->GetModuleId();
+                    #if !defined(ATMOSPHERE_BOARD_NINTENDO_OUNCE)
                     LocateAndApplyIpsPatchesToModule(module_id, static_cast<u8 *>(mapped_memory), nro_header->GetSize());
+                    #endif
 
                     /* Copy to output. */
                     *out_module_id = *module_id;
@@ -581,6 +583,11 @@ namespace ams::ro::impl {
     }
 
     bool ShouldEaseNroRestriction() {
+        #if defined(ATMOSPHERE_BOARD_NINTENDO_OUNCE)
+        /* TODO: we do not have settings mitm yet. */
+        return true;
+        #endif
+
         /* Retrieve whether we should ease restrictions from set:sys. */
         u8 should_ease = 0;
         if (settings::fwdbg::GetSettingsItemValue(std::addressof(should_ease), sizeof(should_ease), "ro", "ease_nro_restriction") != sizeof(should_ease)) {
