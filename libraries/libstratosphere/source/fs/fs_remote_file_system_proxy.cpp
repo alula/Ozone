@@ -17,7 +17,7 @@
 #include "fs_remote_file_system_proxy.hpp"
 #include "fs_remote_file_system_proxy_for_loader.hpp"
 
-#if defined(ATMOSPHERE_BOARD_NINTENDO_NX)
+#if defined(ATMOSPHERE_BOARD_NINTENDO_NX) || defined(ATMOSPHERE_BOARD_NINTENDO_OUNCE)
 extern "C" {
 
     extern u32 __nx_fs_num_sessions;
@@ -27,7 +27,7 @@ extern "C" {
 
 namespace ams::fs {
 
-    #if defined(ATMOSPHERE_BOARD_NINTENDO_NX)
+    #if defined(ATMOSPHERE_BOARD_NINTENDO_NX) || defined(ATMOSPHERE_BOARD_NINTENDO_OUNCE)
     RemoteFileSystemProxy::RemoteFileSystemProxy(int session_count) {
         /* Ensure we can connect to sm. */
         R_ABORT_UNLESS(sm::Initialize());

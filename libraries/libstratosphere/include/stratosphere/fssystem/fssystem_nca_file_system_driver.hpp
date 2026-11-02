@@ -70,7 +70,7 @@ namespace ams::fssystem {
         bool is_plaintext_header_available;
         bool is_available_sw_key;
 
-        #if !defined(ATMOSPHERE_BOARD_NINTENDO_NX)
+        #if !defined(ATMOSPHERE_BOARD_NINTENDO_NX) && !defined(ATMOSPHERE_BOARD_NINTENDO_OUNCE)
         bool is_unsigned_header_available_for_host_tool;
         #endif
     };

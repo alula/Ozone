@@ -88,7 +88,7 @@ namespace ams::fs {
 
             sf::SharedPointer<fssrv::sf::IFileSystemProxy> fsp_object;
 
-            #if defined(ATMOSPHERE_BOARD_NINTENDO_NX) && defined(ATMOSPHERE_OS_HORIZON)
+            #if (defined(ATMOSPHERE_BOARD_NINTENDO_NX) || defined(ATMOSPHERE_BOARD_NINTENDO_OUNCE)) && defined(ATMOSPHERE_OS_HORIZON)
             /* Try to use the custom object. */
             fsp_object = g_fsp_service_object;
 
@@ -129,7 +129,7 @@ namespace ams::fs {
 
             sf::SharedPointer<fssrv::sf::IFileSystemProxyForLoader> fsp_ldr_object;
 
-            #if defined(ATMOSPHERE_BOARD_NINTENDO_NX) && defined(ATMOSPHERE_OS_HORIZON)
+            #if (defined(ATMOSPHERE_BOARD_NINTENDO_NX) || defined(ATMOSPHERE_BOARD_NINTENDO_OUNCE)) && defined(ATMOSPHERE_OS_HORIZON)
             /* Make our next allocation use our static reserved buffer for the service object. */
             g_use_static_fsp_ldr_service_object_buffer = true;
             ON_SCOPE_EXIT { g_use_static_fsp_ldr_service_object_buffer = false; };

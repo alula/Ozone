@@ -60,7 +60,7 @@ namespace ams::fssrv::fscreator {
         R_SUCCEED();
     }
 
-    #if !defined(ATMOSPHERE_BOARD_NINTENDO_NX)
+    #if !defined(ATMOSPHERE_BOARD_NINTENDO_NX) && !defined(ATMOSPHERE_BOARD_NINTENDO_OUNCE)
     Result StorageOnNcaCreator::CreateWithContext(std::shared_ptr<fs::IStorage> *out, std::shared_ptr<fssystem::IAsynchronousAccessSplitter> *out_splitter, fssystem::NcaFsHeaderReader *out_header_reader, void *ctx, std::shared_ptr<fssystem::NcaReader> nca_reader, s32 index) {
         /* Create a fs driver. */
         fssystem::NcaFileSystemDriver nca_fs_driver(nca_reader, m_allocator, m_buffer_manager, m_hash_generator_factory_selector);

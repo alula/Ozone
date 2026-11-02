@@ -124,7 +124,7 @@ namespace ams::fssystem {
 
             m_is_header_sign1_signature_valid = crypto_cfg.verify_sign1(sig, sig_size, msg, msg_size, m_header.header1_signature_key_generation);
 
-            #if defined(ATMOSPHERE_BOARD_NINTENDO_NX)
+            #if defined(ATMOSPHERE_BOARD_NINTENDO_NX) || defined(ATMOSPHERE_BOARD_NINTENDO_OUNCE)
             R_UNLESS(m_is_header_sign1_signature_valid, fs::ResultNcaHeaderSignature1VerificationFailed());
             #else
             R_UNLESS(m_is_header_sign1_signature_valid || crypto_cfg.is_unsigned_header_available_for_host_tool, fs::ResultNcaHeaderSignature1VerificationFailed());

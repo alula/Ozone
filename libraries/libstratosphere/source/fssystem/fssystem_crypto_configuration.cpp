@@ -252,7 +252,7 @@ namespace ams::fssystem {
         cfg->is_available_sw_key           = true;
 
         /* TODO: Should this default to false for host tools with api to set explicitly? */
-        #if !defined(ATMOSPHERE_BOARD_NINTENDO_NX)
+        #if !defined(ATMOSPHERE_BOARD_NINTENDO_NX) && !defined(ATMOSPHERE_BOARD_NINTENDO_OUNCE)
         cfg->is_unsigned_header_available_for_host_tool = true;
         #endif
 
