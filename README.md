@@ -9,6 +9,8 @@
 > 
 > This branch aims to make parts of Atmosphere buildable on the Ounce target: port certain replacements for stock modules and port Atmosphere-libs for any eventual homebrew development.
 
+You need to use https://github.com/alula/libnx-ounce to build it
+
 Licensing
 =====
 
