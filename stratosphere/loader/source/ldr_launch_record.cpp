@@ -60,7 +60,7 @@ namespace ams::ldr {
     void SetLaunchedBootProgram(ncm::ProgramId program_id) {
         if (!g_boot_programs_done) {
             SetLaunchedBootProgramImpl(program_id);
-            if (program_id == ncm::SystemAppletId::Qlaunch) {
+            if (program_id == ncm::SystemAppletId::System) {
                 g_boot_programs_done = true;
             }
         }

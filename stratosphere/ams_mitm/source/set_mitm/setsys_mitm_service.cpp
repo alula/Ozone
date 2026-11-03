@@ -81,7 +81,7 @@ namespace ams::mitm::settings {
 
             /* We want to give a special firmware version to the home menu title, and nothing else. */
             /* This means qlaunch + maintenance menu, and nothing else. */
-            if (client_info.program_id == ncm::SystemAppletId::Qlaunch || client_info.program_id == ncm::SystemAppletId::MaintenanceMenu) {
+            if (client_info.program_id == ncm::SystemAppletId::System || client_info.program_id == ncm::SystemAppletId::MaintenanceMenu) {
                 *out = g_ams_firmware_version;
             } else {
                 *out = g_firmware_version;

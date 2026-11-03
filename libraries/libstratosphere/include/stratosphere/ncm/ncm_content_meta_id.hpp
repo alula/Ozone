@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #pragma once
+#include <stratosphere/ncm/ncm_platform_id.hpp>
 #include <stratosphere/ncm/ncm_data_id.hpp>
 #include <stratosphere/ncm/ncm_program_id.hpp>
 
@@ -26,6 +27,10 @@ namespace ams::ncm {
             return { this->value };
         }
 
+        constexpr inline ApplicationId WithPlatform(PlatformId platform_id) const {
+            return { (static_cast<u64>(platform_id) << PlatformIdShift) | (this->value & ContentIdMask) };
+        }
+
         constexpr inline bool operator==(const ApplicationId &) const = default;
         constexpr inline bool operator!=(const ApplicationId &) const = default;
 
@@ -35,11 +40,12 @@ namespace ams::ncm {
 
     constexpr inline const ApplicationId InvalidApplicationId = {};
 
-    inline constexpr const ApplicationId ApplicationId::Start   = { 0x0100000000010000ul };
-    inline constexpr const ApplicationId ApplicationId::End     = { 0x01FFFFFFFFFFFFFFul };
+    inline constexpr const ApplicationId ApplicationId::Start   = { 0x0000000000010000ul };
+    inline constexpr const ApplicationId ApplicationId::End     = { 0x00FFFFFFFFFFFFFFul };
 
     inline constexpr bool IsApplicationId(const ProgramId &program_id) {
-        return ApplicationId::Start <= program_id && program_id <= ApplicationId::End;
+        const auto cleared_program_id = program_id.WithPlatform(PlatformId::None);
+        return ApplicationId::Start <= cleared_program_id && cleared_program_id <= ApplicationId::End;
     }
 
     inline constexpr bool IsApplicationId(const ApplicationId &) {

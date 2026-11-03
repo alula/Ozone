@@ -15,6 +15,7 @@
  */
 #pragma once
 #include <vapours.hpp>
+#include <stratosphere/ncm/ncm_platform_id.hpp>
 
 namespace ams::ncm {
 
@@ -27,6 +28,10 @@ namespace ams::ncm {
             return { this->value };
         }
         #endif
+
+        constexpr inline ProgramId WithPlatform(PlatformId platform_id) const {
+            return { (static_cast<u64>(platform_id) << PlatformIdShift) | (this->value & ContentIdMask) };
+        }
 
         constexpr inline auto operator<=>(const ProgramId &) const = default;
     };

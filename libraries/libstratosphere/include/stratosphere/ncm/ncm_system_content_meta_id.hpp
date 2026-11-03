@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #pragma once
+#include <stratosphere/ncm/ncm_platform_id.hpp>
 #include <stratosphere/ncm/ncm_data_id.hpp>
 #include <stratosphere/ncm/ncm_program_id.hpp>
 
@@ -138,91 +139,101 @@ namespace ams::ncm {
         return true;
     }
 
-    inline constexpr const SystemProgramId SystemProgramId::Start = { 0x0100000000000000ul };
+    namespace {
+        static inline constexpr SystemProgramId MakeSystemProgramId(u64 value) {
+            return { (static_cast<u64>(impl::CurrentPlatformId) << PlatformIdShift) | (value & ContentIdMask) };
+        }
+    }
 
-    inline constexpr const SystemProgramId SystemProgramId::Fs          = { 0x0100000000000000ul };
-    inline constexpr const SystemProgramId SystemProgramId::Loader      = { 0x0100000000000001ul };
-    inline constexpr const SystemProgramId SystemProgramId::Ncm         = { 0x0100000000000002ul };
-    inline constexpr const SystemProgramId SystemProgramId::Pm          = { 0x0100000000000003ul };
-    inline constexpr const SystemProgramId SystemProgramId::Sm          = { 0x0100000000000004ul };
-    inline constexpr const SystemProgramId SystemProgramId::Boot        = { 0x0100000000000005ul };
-    inline constexpr const SystemProgramId SystemProgramId::Usb         = { 0x0100000000000006ul };
-    inline constexpr const SystemProgramId SystemProgramId::Tma         = { 0x0100000000000007ul };
-    inline constexpr const SystemProgramId SystemProgramId::Boot2       = { 0x0100000000000008ul };
-    inline constexpr const SystemProgramId SystemProgramId::Settings    = { 0x0100000000000009ul };
-    inline constexpr const SystemProgramId SystemProgramId::Bus         = { 0x010000000000000Aul };
-    inline constexpr const SystemProgramId SystemProgramId::Bluetooth   = { 0x010000000000000Bul };
-    inline constexpr const SystemProgramId SystemProgramId::Bcat        = { 0x010000000000000Cul };
-    inline constexpr const SystemProgramId SystemProgramId::Dmnt        = { 0x010000000000000Dul };
-    inline constexpr const SystemProgramId SystemProgramId::Friends     = { 0x010000000000000Eul };
-    inline constexpr const SystemProgramId SystemProgramId::Nifm        = { 0x010000000000000Ful };
-    inline constexpr const SystemProgramId SystemProgramId::Ptm         = { 0x0100000000000010ul };
-    inline constexpr const SystemProgramId SystemProgramId::Shell       = { 0x0100000000000011ul };
-    inline constexpr const SystemProgramId SystemProgramId::BsdSockets  = { 0x0100000000000012ul };
-    inline constexpr const SystemProgramId SystemProgramId::Hid         = { 0x0100000000000013ul };
-    inline constexpr const SystemProgramId SystemProgramId::Audio       = { 0x0100000000000014ul };
-    inline constexpr const SystemProgramId SystemProgramId::LogManager  = { 0x0100000000000015ul };
-    inline constexpr const SystemProgramId SystemProgramId::Wlan        = { 0x0100000000000016ul };
-    inline constexpr const SystemProgramId SystemProgramId::Cs          = { 0x0100000000000017ul };
-    inline constexpr const SystemProgramId SystemProgramId::Ldn         = { 0x0100000000000018ul };
-    inline constexpr const SystemProgramId SystemProgramId::NvServices  = { 0x0100000000000019ul };
-    inline constexpr const SystemProgramId SystemProgramId::Pcv         = { 0x010000000000001Aul };
-    inline constexpr const SystemProgramId SystemProgramId::Ppc         = { 0x010000000000001Bul };
-    inline constexpr const SystemProgramId SystemProgramId::NvnFlinger  = { 0x010000000000001Cul };
-    inline constexpr const SystemProgramId SystemProgramId::Pcie        = { 0x010000000000001Dul };
-    inline constexpr const SystemProgramId SystemProgramId::Account     = { 0x010000000000001Eul };
-    inline constexpr const SystemProgramId SystemProgramId::Ns          = { 0x010000000000001Ful };
-    inline constexpr const SystemProgramId SystemProgramId::Nfc         = { 0x0100000000000020ul };
-    inline constexpr const SystemProgramId SystemProgramId::Psc         = { 0x0100000000000021ul };
-    inline constexpr const SystemProgramId SystemProgramId::CapSrv      = { 0x0100000000000022ul };
-    inline constexpr const SystemProgramId SystemProgramId::Am          = { 0x0100000000000023ul };
-    inline constexpr const SystemProgramId SystemProgramId::Ssl         = { 0x0100000000000024ul };
-    inline constexpr const SystemProgramId SystemProgramId::Nim         = { 0x0100000000000025ul };
-    inline constexpr const SystemProgramId SystemProgramId::Cec         = { 0x0100000000000026ul };
-    inline constexpr const SystemProgramId SystemProgramId::Tspm        = { 0x0100000000000027ul };
-    inline constexpr const SystemProgramId SystemProgramId::Spl         = { 0x0100000000000028ul };
-    inline constexpr const SystemProgramId SystemProgramId::Lbl         = { 0x0100000000000029ul };
-    inline constexpr const SystemProgramId SystemProgramId::Btm         = { 0x010000000000002Aul };
-    inline constexpr const SystemProgramId SystemProgramId::Erpt        = { 0x010000000000002Bul };
-    inline constexpr const SystemProgramId SystemProgramId::Time        = { 0x010000000000002Cul };
-    inline constexpr const SystemProgramId SystemProgramId::Vi          = { 0x010000000000002Dul };
-    inline constexpr const SystemProgramId SystemProgramId::Pctl        = { 0x010000000000002Eul };
-    inline constexpr const SystemProgramId SystemProgramId::Npns        = { 0x010000000000002Ful };
-    inline constexpr const SystemProgramId SystemProgramId::Eupld       = { 0x0100000000000030ul };
-    inline constexpr const SystemProgramId SystemProgramId::Arp         = { 0x0100000000000031ul };
-    inline constexpr const SystemProgramId SystemProgramId::Glue        = { 0x0100000000000031ul };
-    inline constexpr const SystemProgramId SystemProgramId::Eclct       = { 0x0100000000000032ul };
-    inline constexpr const SystemProgramId SystemProgramId::Es          = { 0x0100000000000033ul };
-    inline constexpr const SystemProgramId SystemProgramId::Fatal       = { 0x0100000000000034ul };
-    inline constexpr const SystemProgramId SystemProgramId::Grc         = { 0x0100000000000035ul };
-    inline constexpr const SystemProgramId SystemProgramId::Creport     = { 0x0100000000000036ul };
-    inline constexpr const SystemProgramId SystemProgramId::Ro          = { 0x0100000000000037ul };
-    inline constexpr const SystemProgramId SystemProgramId::Profiler    = { 0x0100000000000038ul };
-    inline constexpr const SystemProgramId SystemProgramId::Sdb         = { 0x0100000000000039ul };
-    inline constexpr const SystemProgramId SystemProgramId::Migration   = { 0x010000000000003Aul };
-    inline constexpr const SystemProgramId SystemProgramId::Jit         = { 0x010000000000003Bul };
-    inline constexpr const SystemProgramId SystemProgramId::JpegDec     = { 0x010000000000003Cul };
-    inline constexpr const SystemProgramId SystemProgramId::SafeMode    = { 0x010000000000003Dul };
-    inline constexpr const SystemProgramId SystemProgramId::Olsc        = { 0x010000000000003Eul };
-    inline constexpr const SystemProgramId SystemProgramId::Dt          = { 0x010000000000003Ful };
-    inline constexpr const SystemProgramId SystemProgramId::Nd          = { 0x0100000000000040ul };
-    inline constexpr const SystemProgramId SystemProgramId::Ngct        = { 0x0100000000000041ul };
-    inline constexpr const SystemProgramId SystemProgramId::Pgl         = { 0x0100000000000042ul };
-    inline constexpr const SystemProgramId SystemProgramId::Omm         = { 0x0100000000000045ul };
-    inline constexpr const SystemProgramId SystemProgramId::Eth         = { 0x0100000000000046ul };
-    inline constexpr const SystemProgramId SystemProgramId::Ngc         = { 0x0100000000000050ul };
+    inline constexpr const SystemProgramId SystemProgramId::Start = MakeSystemProgramId(0x0100000000000000ul);
 
-    inline constexpr const SystemProgramId SystemProgramId::End   = { 0x01000000000007FFul };
+    inline constexpr const SystemProgramId SystemProgramId::Fs          = MakeSystemProgramId(0x0100000000000000ul);
+    inline constexpr const SystemProgramId SystemProgramId::Loader      = MakeSystemProgramId(0x0100000000000001ul);
+    inline constexpr const SystemProgramId SystemProgramId::Ncm         = MakeSystemProgramId(0x0100000000000002ul);
+    inline constexpr const SystemProgramId SystemProgramId::Pm          = MakeSystemProgramId(0x0100000000000003ul);
+    inline constexpr const SystemProgramId SystemProgramId::Sm          = MakeSystemProgramId(0x0100000000000004ul);
+    inline constexpr const SystemProgramId SystemProgramId::Boot        = MakeSystemProgramId(0x0100000000000005ul);
+    inline constexpr const SystemProgramId SystemProgramId::Usb         = MakeSystemProgramId(0x0100000000000006ul);
+    inline constexpr const SystemProgramId SystemProgramId::Tma         = MakeSystemProgramId(0x0100000000000007ul);
+    inline constexpr const SystemProgramId SystemProgramId::Boot2       = MakeSystemProgramId(0x0100000000000008ul);
+    inline constexpr const SystemProgramId SystemProgramId::Settings    = MakeSystemProgramId(0x0100000000000009ul);
+    inline constexpr const SystemProgramId SystemProgramId::Bus         = MakeSystemProgramId(0x010000000000000Aul);
+    inline constexpr const SystemProgramId SystemProgramId::Bluetooth   = MakeSystemProgramId(0x010000000000000Bul);
+    inline constexpr const SystemProgramId SystemProgramId::Bcat        = MakeSystemProgramId(0x010000000000000Cul);
+    inline constexpr const SystemProgramId SystemProgramId::Dmnt        = MakeSystemProgramId(0x010000000000000Dul);
+    inline constexpr const SystemProgramId SystemProgramId::Friends     = MakeSystemProgramId(0x010000000000000Eul);
+    inline constexpr const SystemProgramId SystemProgramId::Nifm        = MakeSystemProgramId(0x010000000000000Ful);
+    inline constexpr const SystemProgramId SystemProgramId::Ptm         = MakeSystemProgramId(0x0100000000000010ul);
+    inline constexpr const SystemProgramId SystemProgramId::Shell       = MakeSystemProgramId(0x0100000000000011ul);
+    inline constexpr const SystemProgramId SystemProgramId::BsdSockets  = MakeSystemProgramId(0x0100000000000012ul);
+    inline constexpr const SystemProgramId SystemProgramId::Hid         = MakeSystemProgramId(0x0100000000000013ul);
+    inline constexpr const SystemProgramId SystemProgramId::Audio       = MakeSystemProgramId(0x0100000000000014ul);
+    inline constexpr const SystemProgramId SystemProgramId::LogManager  = MakeSystemProgramId(0x0100000000000015ul);
+    inline constexpr const SystemProgramId SystemProgramId::Wlan        = MakeSystemProgramId(0x0100000000000016ul);
+    inline constexpr const SystemProgramId SystemProgramId::Cs          = MakeSystemProgramId(0x0100000000000017ul);
+    inline constexpr const SystemProgramId SystemProgramId::Ldn         = MakeSystemProgramId(0x0100000000000018ul);
+    inline constexpr const SystemProgramId SystemProgramId::NvServices  = MakeSystemProgramId(0x0100000000000019ul);
+    inline constexpr const SystemProgramId SystemProgramId::Pcv         = MakeSystemProgramId(0x010000000000001Aul);
+    inline constexpr const SystemProgramId SystemProgramId::Ppc         = MakeSystemProgramId(0x010000000000001Bul);
+    inline constexpr const SystemProgramId SystemProgramId::NvnFlinger  = MakeSystemProgramId(0x010000000000001Cul);
+    inline constexpr const SystemProgramId SystemProgramId::Pcie        = MakeSystemProgramId(0x010000000000001Dul);
+    inline constexpr const SystemProgramId SystemProgramId::Account     = MakeSystemProgramId(0x010000000000001Eul);
+    inline constexpr const SystemProgramId SystemProgramId::Ns          = MakeSystemProgramId(0x010000000000001Ful);
+    inline constexpr const SystemProgramId SystemProgramId::Nfc         = MakeSystemProgramId(0x0100000000000020ul);
+    inline constexpr const SystemProgramId SystemProgramId::Psc         = MakeSystemProgramId(0x0100000000000021ul);
+    inline constexpr const SystemProgramId SystemProgramId::CapSrv      = MakeSystemProgramId(0x0100000000000022ul);
+    inline constexpr const SystemProgramId SystemProgramId::Am          = MakeSystemProgramId(0x0100000000000023ul);
+    inline constexpr const SystemProgramId SystemProgramId::Ssl         = MakeSystemProgramId(0x0100000000000024ul);
+    inline constexpr const SystemProgramId SystemProgramId::Nim         = MakeSystemProgramId(0x0100000000000025ul);
+    inline constexpr const SystemProgramId SystemProgramId::Cec         = MakeSystemProgramId(0x0100000000000026ul);
+    inline constexpr const SystemProgramId SystemProgramId::Tspm        = MakeSystemProgramId(0x0100000000000027ul);
+    inline constexpr const SystemProgramId SystemProgramId::Spl         = MakeSystemProgramId(0x0100000000000028ul);
+    inline constexpr const SystemProgramId SystemProgramId::Lbl         = MakeSystemProgramId(0x0100000000000029ul);
+    inline constexpr const SystemProgramId SystemProgramId::Btm         = MakeSystemProgramId(0x010000000000002Aul);
+    inline constexpr const SystemProgramId SystemProgramId::Erpt        = MakeSystemProgramId(0x010000000000002Bul);
+    inline constexpr const SystemProgramId SystemProgramId::Time        = MakeSystemProgramId(0x010000000000002Cul);
+    inline constexpr const SystemProgramId SystemProgramId::Vi          = MakeSystemProgramId(0x010000000000002Dul);
+    inline constexpr const SystemProgramId SystemProgramId::Pctl        = MakeSystemProgramId(0x010000000000002Eul);
+    inline constexpr const SystemProgramId SystemProgramId::Npns        = MakeSystemProgramId(0x010000000000002Ful);
+    inline constexpr const SystemProgramId SystemProgramId::Eupld       = MakeSystemProgramId(0x0100000000000030ul);
+    inline constexpr const SystemProgramId SystemProgramId::Arp         = MakeSystemProgramId(0x0100000000000031ul);
+    inline constexpr const SystemProgramId SystemProgramId::Glue        = MakeSystemProgramId(0x0100000000000031ul);
+    inline constexpr const SystemProgramId SystemProgramId::Eclct       = MakeSystemProgramId(0x0100000000000032ul);
+    inline constexpr const SystemProgramId SystemProgramId::Es          = MakeSystemProgramId(0x0100000000000033ul);
+    inline constexpr const SystemProgramId SystemProgramId::Fatal       = MakeSystemProgramId(0x0100000000000034ul);
+    inline constexpr const SystemProgramId SystemProgramId::Grc         = MakeSystemProgramId(0x0100000000000035ul);
+    inline constexpr const SystemProgramId SystemProgramId::Creport     = MakeSystemProgramId(0x0100000000000036ul);
+    inline constexpr const SystemProgramId SystemProgramId::Ro          = MakeSystemProgramId(0x0100000000000037ul);
+    inline constexpr const SystemProgramId SystemProgramId::Profiler    = MakeSystemProgramId(0x0100000000000038ul);
+    inline constexpr const SystemProgramId SystemProgramId::Sdb         = MakeSystemProgramId(0x0100000000000039ul);
+    inline constexpr const SystemProgramId SystemProgramId::Migration   = MakeSystemProgramId(0x010000000000003Aul);
+    inline constexpr const SystemProgramId SystemProgramId::Jit         = MakeSystemProgramId(0x010000000000003Bul);
+    inline constexpr const SystemProgramId SystemProgramId::JpegDec     = MakeSystemProgramId(0x010000000000003Cul);
+    inline constexpr const SystemProgramId SystemProgramId::SafeMode    = MakeSystemProgramId(0x010000000000003Dul);
+    inline constexpr const SystemProgramId SystemProgramId::Olsc        = MakeSystemProgramId(0x010000000000003Eul);
+    inline constexpr const SystemProgramId SystemProgramId::Dt          = MakeSystemProgramId(0x010000000000003Ful);
+    inline constexpr const SystemProgramId SystemProgramId::Nd          = MakeSystemProgramId(0x0100000000000040ul);
+    inline constexpr const SystemProgramId SystemProgramId::Ngct        = MakeSystemProgramId(0x0100000000000041ul);
+    inline constexpr const SystemProgramId SystemProgramId::Pgl         = MakeSystemProgramId(0x0100000000000042ul);
+    inline constexpr const SystemProgramId SystemProgramId::Omm         = MakeSystemProgramId(0x0100000000000045ul);
+    inline constexpr const SystemProgramId SystemProgramId::Eth         = MakeSystemProgramId(0x0100000000000046ul);
+    inline constexpr const SystemProgramId SystemProgramId::Ngc         = MakeSystemProgramId(0x0100000000000050ul);
 
-    inline constexpr const SystemProgramId SystemProgramId::BrowserCoreDll = { 0x010000000000085Dul };
+    inline constexpr const SystemProgramId SystemProgramId::End         = MakeSystemProgramId(0x01000000000007FFul);
 
-    inline constexpr const SystemProgramId SystemProgramId::Manu           = { 0x010000000000B14Aul };
-    inline constexpr const SystemProgramId SystemProgramId::Htc            = { 0x010000000000B240ul };
-    inline constexpr const SystemProgramId SystemProgramId::DmntGen2       = { 0x010000000000D609ul };
-    inline constexpr const SystemProgramId SystemProgramId::DevServer      = { 0x010000000000D623ul };
+    inline constexpr const SystemProgramId SystemProgramId::BrowserCoreDll = MakeSystemProgramId(0x010000000000085Dul);
+
+    inline constexpr const SystemProgramId SystemProgramId::Manu           = MakeSystemProgramId(0x010000000000B14Aul);
+    inline constexpr const SystemProgramId SystemProgramId::Htc            = MakeSystemProgramId(0x010000000000B240ul);
+    inline constexpr const SystemProgramId SystemProgramId::DmntGen2       = MakeSystemProgramId(0x010000000000D609ul);
+    inline constexpr const SystemProgramId SystemProgramId::DevServer      = MakeSystemProgramId(0x010000000000D623ul);
 
     inline constexpr bool IsSystemProgramId(const ProgramId &program_id) {
-        return (SystemProgramId::Start <= program_id && program_id <= SystemProgramId::End) || IsAtmosphereProgramId(program_id);
+        const ProgramId cleared_program_id = program_id.WithPlatform(PlatformId::None);
+        const ProgramId cleared_start = static_cast<ProgramId>(SystemProgramId::Start).WithPlatform(PlatformId::None);
+        const ProgramId cleared_end = static_cast<ProgramId>(SystemProgramId::End).WithPlatform(PlatformId::None);
+
+        return cleared_start <= cleared_program_id && cleared_program_id <= cleared_end;
     }
 
     inline constexpr bool IsSystemProgramId(const SystemProgramId &) {
@@ -289,56 +300,67 @@ namespace ams::ncm {
         static const SystemDataId End;
     };
 
-    inline constexpr const SystemDataId SystemDataId::Start                         = { 0x0100000000000800ul };
-    inline constexpr const SystemDataId SystemDataId::CertStore                     = { 0x0100000000000800ul };
-    inline constexpr const SystemDataId SystemDataId::ErrorMessage                  = { 0x0100000000000801ul };
-    inline constexpr const SystemDataId SystemDataId::MiiModel                      = { 0x0100000000000802ul };
-    inline constexpr const SystemDataId SystemDataId::BrowserDll                    = { 0x0100000000000803ul };
-    inline constexpr const SystemDataId SystemDataId::Help                          = { 0x0100000000000804ul };
-    inline constexpr const SystemDataId SystemDataId::SharedFont                    = { 0x0100000000000805ul };
-    inline constexpr const SystemDataId SystemDataId::NgWord                        = { 0x0100000000000806ul };
-    inline constexpr const SystemDataId SystemDataId::SsidList                      = { 0x0100000000000807ul };
-    inline constexpr const SystemDataId SystemDataId::Dictionary                    = { 0x0100000000000808ul };
-    inline constexpr const SystemDataId SystemDataId::SystemVersion                 = { 0x0100000000000809ul };
-    inline constexpr const SystemDataId SystemDataId::AvatarImage                   = { 0x010000000000080Aul };
-    inline constexpr const SystemDataId SystemDataId::LocalNews                     = { 0x010000000000080Bul };
-    inline constexpr const SystemDataId SystemDataId::Eula                          = { 0x010000000000080Cul };
-    inline constexpr const SystemDataId SystemDataId::UrlBlackList                  = { 0x010000000000080Dul };
-    inline constexpr const SystemDataId SystemDataId::TimeZoneBinar                 = { 0x010000000000080Eul };
-    inline constexpr const SystemDataId SystemDataId::CertStoreCruiser              = { 0x010000000000080Ful };
-    inline constexpr const SystemDataId SystemDataId::FontNintendoExtension         = { 0x0100000000000810ul };
-    inline constexpr const SystemDataId SystemDataId::FontStandard                  = { 0x0100000000000811ul };
-    inline constexpr const SystemDataId SystemDataId::FontKorean                    = { 0x0100000000000812ul };
-    inline constexpr const SystemDataId SystemDataId::FontChineseTraditional        = { 0x0100000000000813ul };
-    inline constexpr const SystemDataId SystemDataId::FontChineseSimple             = { 0x0100000000000814ul };
-    inline constexpr const SystemDataId SystemDataId::FontBfcpx                     = { 0x0100000000000815ul };
-    inline constexpr const SystemDataId SystemDataId::SystemUpdate                  = { 0x0100000000000816ul };
+    namespace {
 
-    inline constexpr const SystemDataId SystemDataId::FirmwareDebugSettings         = { 0x0100000000000818ul };
-    inline constexpr const SystemDataId SystemDataId::BootImagePackage              = { 0x0100000000000819ul };
-    inline constexpr const SystemDataId SystemDataId::BootImagePackageSafe          = { 0x010000000000081Aul };
-    inline constexpr const SystemDataId SystemDataId::BootImagePackageExFat         = { 0x010000000000081Bul };
-    inline constexpr const SystemDataId SystemDataId::BootImagePackageExFatSafe     = { 0x010000000000081Cul };
-    inline constexpr const SystemDataId SystemDataId::FatalMessage                  = { 0x010000000000081Dul };
-    inline constexpr const SystemDataId SystemDataId::ControllerIcon                = { 0x010000000000081Eul };
-    inline constexpr const SystemDataId SystemDataId::PlatformConfigIcosa           = { 0x010000000000081Ful };
-    inline constexpr const SystemDataId SystemDataId::PlatformConfigCopper          = { 0x0100000000000820ul };
-    inline constexpr const SystemDataId SystemDataId::PlatformConfigHoag            = { 0x0100000000000821ul };
-    inline constexpr const SystemDataId SystemDataId::ControllerFirmware            = { 0x0100000000000822ul };
-    inline constexpr const SystemDataId SystemDataId::NgWord2                       = { 0x0100000000000823ul };
-    inline constexpr const SystemDataId SystemDataId::PlatformConfigIcosaMariko     = { 0x0100000000000824ul };
-    inline constexpr const SystemDataId SystemDataId::ApplicationBlackList          = { 0x0100000000000825ul };
-    inline constexpr const SystemDataId SystemDataId::RebootlessSystemUpdateVersion = { 0x0100000000000826ul };
-    inline constexpr const SystemDataId SystemDataId::ContentActionTable            = { 0x0100000000000827ul };
+        static inline constexpr SystemDataId MakeSystemDataId(u64 value) {
+            return { (static_cast<u64>(impl::CurrentPlatformId) << PlatformIdShift) | (value & ContentIdMask) };
+        }
 
-    inline constexpr const SystemDataId SystemDataId::PlatformConfigCalcio          = { 0x0100000000000829ul };
+    }
 
-    inline constexpr const SystemDataId SystemDataId::PlatformConfigAula            = { 0x0100000000000831ul };
+    inline constexpr const SystemDataId SystemDataId::Start                         = MakeSystemDataId(0x0100000000000800ul);
+    inline constexpr const SystemDataId SystemDataId::CertStore                     = MakeSystemDataId(0x0100000000000800ul);
+    inline constexpr const SystemDataId SystemDataId::ErrorMessage                  = MakeSystemDataId(0x0100000000000801ul);
+    inline constexpr const SystemDataId SystemDataId::MiiModel                      = MakeSystemDataId(0x0100000000000802ul);
+    inline constexpr const SystemDataId SystemDataId::BrowserDll                    = MakeSystemDataId(0x0100000000000803ul);
+    inline constexpr const SystemDataId SystemDataId::Help                          = MakeSystemDataId(0x0100000000000804ul);
+    inline constexpr const SystemDataId SystemDataId::SharedFont                    = MakeSystemDataId(0x0100000000000805ul);
+    inline constexpr const SystemDataId SystemDataId::NgWord                        = MakeSystemDataId(0x0100000000000806ul);
+    inline constexpr const SystemDataId SystemDataId::SsidList                      = MakeSystemDataId(0x0100000000000807ul);
+    inline constexpr const SystemDataId SystemDataId::Dictionary                    = MakeSystemDataId(0x0100000000000808ul);
+    inline constexpr const SystemDataId SystemDataId::SystemVersion                 = MakeSystemDataId(0x0100000000000809ul);
+    inline constexpr const SystemDataId SystemDataId::AvatarImage                   = MakeSystemDataId(0x010000000000080Aul);
+    inline constexpr const SystemDataId SystemDataId::LocalNews                     = MakeSystemDataId(0x010000000000080Bul);
+    inline constexpr const SystemDataId SystemDataId::Eula                          = MakeSystemDataId(0x010000000000080Cul);
+    inline constexpr const SystemDataId SystemDataId::UrlBlackList                  = MakeSystemDataId(0x010000000000080Dul);
+    inline constexpr const SystemDataId SystemDataId::TimeZoneBinar                 = MakeSystemDataId(0x010000000000080Eul);
+    inline constexpr const SystemDataId SystemDataId::CertStoreCruiser              = MakeSystemDataId(0x010000000000080Ful);
+    inline constexpr const SystemDataId SystemDataId::FontNintendoExtension         = MakeSystemDataId(0x0100000000000810ul);
+    inline constexpr const SystemDataId SystemDataId::FontStandard                  = MakeSystemDataId(0x0100000000000811ul);
+    inline constexpr const SystemDataId SystemDataId::FontKorean                    = MakeSystemDataId(0x0100000000000812ul);
+    inline constexpr const SystemDataId SystemDataId::FontChineseTraditional        = MakeSystemDataId(0x0100000000000813ul);
+    inline constexpr const SystemDataId SystemDataId::FontChineseSimple             = MakeSystemDataId(0x0100000000000814ul);
+    inline constexpr const SystemDataId SystemDataId::FontBfcpx                     = MakeSystemDataId(0x0100000000000815ul);
+    inline constexpr const SystemDataId SystemDataId::SystemUpdate                  = MakeSystemDataId(0x0100000000000816ul);
 
-    inline constexpr const SystemDataId SystemDataId::End                           = { 0x0100000000000FFFul };
+    inline constexpr const SystemDataId SystemDataId::FirmwareDebugSettings         = MakeSystemDataId(0x0100000000000818ul);
+    inline constexpr const SystemDataId SystemDataId::BootImagePackage              = MakeSystemDataId(0x0100000000000819ul);
+    inline constexpr const SystemDataId SystemDataId::BootImagePackageSafe          = MakeSystemDataId(0x010000000000081Aul);
+    inline constexpr const SystemDataId SystemDataId::BootImagePackageExFat         = MakeSystemDataId(0x010000000000081Bul);
+    inline constexpr const SystemDataId SystemDataId::BootImagePackageExFatSafe     = MakeSystemDataId(0x010000000000081Cul);
+    inline constexpr const SystemDataId SystemDataId::FatalMessage                  = MakeSystemDataId(0x010000000000081Dul);
+    inline constexpr const SystemDataId SystemDataId::ControllerIcon                = MakeSystemDataId(0x010000000000081Eul);
+    inline constexpr const SystemDataId SystemDataId::PlatformConfigIcosa           = MakeSystemDataId(0x010000000000081Ful);
+    inline constexpr const SystemDataId SystemDataId::PlatformConfigCopper          = MakeSystemDataId(0x0100000000000820ul);
+    inline constexpr const SystemDataId SystemDataId::PlatformConfigHoag            = MakeSystemDataId(0x0100000000000821ul);
+    inline constexpr const SystemDataId SystemDataId::ControllerFirmware            = MakeSystemDataId(0x0100000000000822ul);
+    inline constexpr const SystemDataId SystemDataId::NgWord2                       = MakeSystemDataId(0x0100000000000823ul);
+    inline constexpr const SystemDataId SystemDataId::PlatformConfigIcosaMariko     = MakeSystemDataId(0x0100000000000824ul);
+    inline constexpr const SystemDataId SystemDataId::ApplicationBlackList          = MakeSystemDataId(0x0100000000000825ul);
+    inline constexpr const SystemDataId SystemDataId::RebootlessSystemUpdateVersion = MakeSystemDataId(0x0100000000000826ul);
+    inline constexpr const SystemDataId SystemDataId::ContentActionTable            = MakeSystemDataId(0x0100000000000827ul);
+
+    inline constexpr const SystemDataId SystemDataId::PlatformConfigCalcio          = MakeSystemDataId(0x0100000000000829ul);
+
+    inline constexpr const SystemDataId SystemDataId::PlatformConfigAula            = MakeSystemDataId(0x0100000000000831ul);
+
+    inline constexpr const SystemDataId SystemDataId::End                           = MakeSystemDataId(0x0100000000000FFFul);
 
     inline constexpr bool IsSystemDataId(const DataId &data_id) {
-        return SystemDataId::Start <= data_id && data_id <= SystemDataId::End;
+        const DataId cleared_data_id = data_id.WithPlatform(PlatformId::None);
+        const DataId cleared_start = static_cast<DataId>(SystemDataId::Start).WithPlatform(PlatformId::None);
+        const DataId cleared_end = static_cast<DataId>(SystemDataId::End).WithPlatform(PlatformId::None);
+        return cleared_start <= cleared_data_id && cleared_data_id <= cleared_end;
     }
 
     inline constexpr bool IsSystemDataId(const SystemDataId &) {
@@ -368,7 +390,7 @@ namespace ams::ncm {
 
         static const SystemAppletId Start;
 
-        static const SystemAppletId Qlaunch;
+        static const SystemAppletId System;
         static const SystemAppletId Auth;
         static const SystemAppletId Cabinet;
         static const SystemAppletId Controller;
@@ -404,45 +426,57 @@ namespace ams::ncm {
         static const SystemAppletId End;
     };
 
-    inline constexpr const SystemAppletId SystemAppletId::Start           = { 0x0100000000001000ul };
+    namespace {
 
-    inline constexpr const SystemAppletId SystemAppletId::Qlaunch         = { 0x0100000000001000ul };
-    inline constexpr const SystemAppletId SystemAppletId::Auth            = { 0x0100000000001001ul };
-    inline constexpr const SystemAppletId SystemAppletId::Cabinet         = { 0x0100000000001002ul };
-    inline constexpr const SystemAppletId SystemAppletId::Controller      = { 0x0100000000001003ul };
-    inline constexpr const SystemAppletId SystemAppletId::DataErase       = { 0x0100000000001004ul };
-    inline constexpr const SystemAppletId SystemAppletId::Error           = { 0x0100000000001005ul };
-    inline constexpr const SystemAppletId SystemAppletId::NetConnect      = { 0x0100000000001006ul };
-    inline constexpr const SystemAppletId SystemAppletId::PlayerSelect    = { 0x0100000000001007ul };
-    inline constexpr const SystemAppletId SystemAppletId::Swkbd           = { 0x0100000000001008ul };
-    inline constexpr const SystemAppletId SystemAppletId::MiiEdit         = { 0x0100000000001009ul };
-    inline constexpr const SystemAppletId SystemAppletId::Web             = { 0x010000000000100Aul };
-    inline constexpr const SystemAppletId SystemAppletId::Shop            = { 0x010000000000100Bul };
-    inline constexpr const SystemAppletId SystemAppletId::OverlayDisp     = { 0x010000000000100Cul };
-    inline constexpr const SystemAppletId SystemAppletId::PhotoViewer     = { 0x010000000000100Dul };
-    inline constexpr const SystemAppletId SystemAppletId::Set             = { 0x010000000000100Eul };
-    inline constexpr const SystemAppletId SystemAppletId::OfflineWeb      = { 0x010000000000100Ful };
-    inline constexpr const SystemAppletId SystemAppletId::LoginShare      = { 0x0100000000001010ul };
-    inline constexpr const SystemAppletId SystemAppletId::WifiWebAuth     = { 0x0100000000001011ul };
-    inline constexpr const SystemAppletId SystemAppletId::Starter         = { 0x0100000000001012ul };
-    inline constexpr const SystemAppletId SystemAppletId::MyPage          = { 0x0100000000001013ul };
-    inline constexpr const SystemAppletId SystemAppletId::PlayReport      = { 0x0100000000001014ul };
-    inline constexpr const SystemAppletId SystemAppletId::MaintenanceMenu = { 0x0100000000001015ul };
+        static inline constexpr SystemAppletId MakeSystemAppletId(u64 value) {
+            return { (static_cast<u64>(impl::CurrentPlatformId) << PlatformIdShift) | (value & ContentIdMask) };
+        }
 
-    inline constexpr const SystemAppletId SystemAppletId::Gift            = { 0x010000000000101Aul };
-    inline constexpr const SystemAppletId SystemAppletId::DummyShop       = { 0x010000000000101Bul };
-    inline constexpr const SystemAppletId SystemAppletId::UserMigration   = { 0x010000000000101Cul };
-    inline constexpr const SystemAppletId SystemAppletId::Encounter       = { 0x010000000000101Dul };
+    }
 
-    inline constexpr const SystemAppletId SystemAppletId::Story           = { 0x0100000000001020ul };
+    inline constexpr const SystemAppletId SystemAppletId::Start           = MakeSystemAppletId(0x0100000000001000ul);
 
-    inline constexpr const SystemAppletId SystemAppletId::SystemWeb       = { 0x0100000000001042ul };
-    inline constexpr const SystemAppletId SystemAppletId::OpenWeb         = { 0x0100000000001043ul };
+    inline constexpr const SystemAppletId SystemAppletId::System          = MakeSystemAppletId(0x0100000000001000ul);
+    inline constexpr const SystemAppletId SystemAppletId::Auth            = MakeSystemAppletId(0x0100000000001001ul);
+    inline constexpr const SystemAppletId SystemAppletId::Cabinet         = MakeSystemAppletId(0x0100000000001002ul);
+    inline constexpr const SystemAppletId SystemAppletId::Controller      = MakeSystemAppletId(0x0100000000001003ul);
+    inline constexpr const SystemAppletId SystemAppletId::DataErase       = MakeSystemAppletId(0x0100000000001004ul);
+    inline constexpr const SystemAppletId SystemAppletId::Error           = MakeSystemAppletId(0x0100000000001005ul);
+    inline constexpr const SystemAppletId SystemAppletId::NetConnect      = MakeSystemAppletId(0x0100000000001006ul);
+    inline constexpr const SystemAppletId SystemAppletId::PlayerSelect    = MakeSystemAppletId(0x0100000000001007ul);
+    inline constexpr const SystemAppletId SystemAppletId::Swkbd           = MakeSystemAppletId(0x0100000000001008ul);
+    inline constexpr const SystemAppletId SystemAppletId::MiiEdit         = MakeSystemAppletId(0x0100000000001009ul);
+    inline constexpr const SystemAppletId SystemAppletId::Web             = MakeSystemAppletId(0x010000000000100Aul);
+    inline constexpr const SystemAppletId SystemAppletId::Shop            = MakeSystemAppletId(0x010000000000100Bul);
+    inline constexpr const SystemAppletId SystemAppletId::OverlayDisp     = MakeSystemAppletId(0x010000000000100Cul);
+    inline constexpr const SystemAppletId SystemAppletId::PhotoViewer     = MakeSystemAppletId(0x010000000000100Dul);
+    inline constexpr const SystemAppletId SystemAppletId::Set             = MakeSystemAppletId(0x010000000000100Eul);
+    inline constexpr const SystemAppletId SystemAppletId::OfflineWeb      = MakeSystemAppletId(0x010000000000100Ful);
+    inline constexpr const SystemAppletId SystemAppletId::LoginShare      = MakeSystemAppletId(0x0100000000001010ul);
+    inline constexpr const SystemAppletId SystemAppletId::WifiWebAuth     = MakeSystemAppletId(0x0100000000001011ul);
+    inline constexpr const SystemAppletId SystemAppletId::Starter         = MakeSystemAppletId(0x0100000000001012ul);
+    inline constexpr const SystemAppletId SystemAppletId::MyPage          = MakeSystemAppletId(0x0100000000001013ul);
+    inline constexpr const SystemAppletId SystemAppletId::PlayReport      = MakeSystemAppletId(0x0100000000001014ul);
+    inline constexpr const SystemAppletId SystemAppletId::MaintenanceMenu = MakeSystemAppletId(0x0100000000001015ul);
 
-    inline constexpr const SystemAppletId SystemAppletId::End             = { 0x0100000000001FFFul };
+    inline constexpr const SystemAppletId SystemAppletId::Gift            = MakeSystemAppletId(0x010000000000101Aul);
+    inline constexpr const SystemAppletId SystemAppletId::DummyShop       = MakeSystemAppletId(0x010000000000101Bul);
+    inline constexpr const SystemAppletId SystemAppletId::UserMigration   = MakeSystemAppletId(0x010000000000101Cul);
+    inline constexpr const SystemAppletId SystemAppletId::Encounter       = MakeSystemAppletId(0x010000000000101Dul);
+
+    inline constexpr const SystemAppletId SystemAppletId::Story           = MakeSystemAppletId(0x0100000000001020ul);
+
+    inline constexpr const SystemAppletId SystemAppletId::SystemWeb       = MakeSystemAppletId(0x0100000000001042ul);
+    inline constexpr const SystemAppletId SystemAppletId::OpenWeb         = MakeSystemAppletId(0x0100000000001043ul);
+
+    inline constexpr const SystemAppletId SystemAppletId::End             = MakeSystemAppletId(0x0100000000001FFFul);
 
     inline constexpr bool IsSystemAppletId(const ProgramId &program_id) {
-        return SystemAppletId::Start <= program_id && program_id <= SystemAppletId::End;
+        const ProgramId cleared_program_id = program_id.WithPlatform(PlatformId::None);
+        const ProgramId cleared_start = static_cast<ProgramId>(SystemAppletId::Start).WithPlatform(PlatformId::None);
+        const ProgramId cleared_end = static_cast<ProgramId>(SystemAppletId::End).WithPlatform(PlatformId::None);
+
+        return cleared_start <= cleared_program_id && cleared_program_id <= cleared_end;
     }
 
     inline constexpr bool IsSystemAppletId(const SystemAppletId &) {
@@ -466,14 +500,26 @@ namespace ams::ncm {
         static const SystemDebugAppletId End;
     };
 
-    inline constexpr const SystemDebugAppletId SystemDebugAppletId::Start           = { 0x0100000000002000ul };
+    namespace {
 
-    inline constexpr const SystemDebugAppletId SystemDebugAppletId::SnapShotDumper  = { 0x0100000000002071ul };
+        static inline constexpr SystemDebugAppletId MakeSystemDebugAppletId(u64 value) {
+            return { (static_cast<u64>(impl::CurrentPlatformId) << PlatformIdShift) | (value & ContentIdMask) };
+        }
 
-    inline constexpr const SystemDebugAppletId SystemDebugAppletId::End             = { 0x0100000000002FFFul };
+    }
+
+    inline constexpr const SystemDebugAppletId SystemDebugAppletId::Start           = MakeSystemDebugAppletId(0x0100000000002000ul);
+
+    inline constexpr const SystemDebugAppletId SystemDebugAppletId::SnapShotDumper  = MakeSystemDebugAppletId(0x0100000000002071ul);
+
+    inline constexpr const SystemDebugAppletId SystemDebugAppletId::End             = MakeSystemDebugAppletId(0x0100000000002FFFul);
 
     inline constexpr bool IsSystemDebugAppletId(const ProgramId &program_id) {
-        return SystemDebugAppletId::Start <= program_id && program_id <= SystemDebugAppletId::End;
+        const ProgramId cleared_program_id = program_id.WithPlatform(PlatformId::None);
+        const ProgramId cleared_start = static_cast<ProgramId>(SystemDebugAppletId::Start).WithPlatform(PlatformId::None);
+        const ProgramId cleared_end = static_cast<ProgramId>(SystemDebugAppletId::End).WithPlatform(PlatformId::None);
+
+        return cleared_start <= cleared_program_id && cleared_program_id <= cleared_end;
     }
 
     inline constexpr bool IsSystemDebugAppletId(const SystemDebugAppletId &) {

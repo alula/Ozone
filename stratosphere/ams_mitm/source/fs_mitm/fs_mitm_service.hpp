@@ -76,7 +76,7 @@ namespace ams::mitm::fs {
                 /* Figure out why, and address it. */
                 /* TODO: This may be because pre-rewrite code really mismanaged domain objects in a way that would cause bad things. */
                 /* Need to verify if this is fixed now. */
-                if (client_info.program_id == ncm::SystemAppletId::Qlaunch || client_info.program_id == ncm::SystemAppletId::MaintenanceMenu) {
+                if (client_info.program_id == ncm::SystemAppletId::System || client_info.program_id == ncm::SystemAppletId::MaintenanceMenu) {
                     has_launched_qlaunch = true;
                 }
 
