@@ -16,6 +16,7 @@
 #include <stratosphere.hpp>
 #include "ro_ro_service.hpp"
 #include "impl/ro_service_impl.hpp"
+#include "impl/ro_ns2jb_service_impl.hpp"
 
 namespace ams::ro {
 
@@ -67,5 +68,39 @@ namespace ams::ro {
         /* Register the module. */
         R_RETURN(impl::RegisterModuleInfo(m_context_id, process_h.GetOsHandle(), nrr_address, nrr_size, m_nrr_kind, m_nrr_kind == NrrKind_JitPlugin));
     }
+
+    #if defined(ATMOSPHERE_BOARD_NINTENDO_OUNCE)
+    Result RoService::ProbeExecution(sf::Out<impl::ProbeReply> out, u64 nonce) {
+        R_RETURN(impl::ProbeExecution(out.GetPointer(), nonce));
+    }
+
+    Result RoService::QueryProcessInfo(sf::Out<impl::ProcessInfoReply> out, os::ProcessId process_id, u64 address, sf::CopyHandle &&process_h) {
+        R_RETURN(impl::QueryProcessInfo(out.GetPointer(), process_h.GetOsHandle(), process_id, address));
+    }
+
+    Result RoService::ReadProcessMemory(sf::Out<impl::ProcessReadReply> out, os::ProcessId process_id, u64 source, u64 length, sf::CopyHandle &&process_h) {
+        R_RETURN(impl::ReadProcessMemory(out.GetPointer(), process_h.GetOsHandle(), process_id, source, length));
+    }
+
+    Result RoService::MapProcessCodeMemory(sf::Out<impl::ProcessCodeMapReply> out, os::ProcessId process_id, u64 source, u64 destination, u64 size, sf::CopyHandle &&process_h) {
+        R_RETURN(impl::MapProcessCodeMemory(out.GetPointer(), process_h.GetOsHandle(), process_id, source, destination, size));
+    }
+
+    Result RoService::UnmapProcessCodeMemory(sf::Out<impl::ProcessCodeMapReply> out, os::ProcessId process_id, u64 source, u64 destination, u64 size, sf::CopyHandle &&process_h) {
+        R_RETURN(impl::UnmapProcessCodeMemory(out.GetPointer(), process_h.GetOsHandle(), process_id, source, destination, size));
+    }
+
+    Result RoService::PatchProcessCodeMemory(sf::Out<impl::ProcessPatchReply> out, os::ProcessId process_id, u64 address, u64 size, impl::ProcessPatchInput patch, sf::CopyHandle &&process_h) {
+        R_RETURN(impl::PatchProcessCodeMemory(out.GetPointer(), process_h.GetOsHandle(), process_id, address, size, patch));
+    }
+
+    Result RoService::SetProcessMemoryPermission(sf::Out<impl::ProcessPermissionReply> out, os::ProcessId process_id, u64 address, u64 size, u64 permission, sf::CopyHandle &&process_h) {
+        R_RETURN(impl::SetProcessMemoryPermission(out.GetPointer(), process_h.GetOsHandle(), process_id, address, size, permission));
+    }
+
+    Result RoService::BulkReadProcessMemory(sf::Out<impl::ProcessBulkReadReply> out, const sf::OutMapAliasBuffer &receive_buf, os::ProcessId process_id, u64 source, u64 length, sf::CopyHandle &&process_h) {
+        R_RETURN(impl::BulkReadProcessMemory(out.GetPointer(), receive_buf.GetPointer(), receive_buf.GetSize(), process_h.GetOsHandle(), process_id, source, length));
+    }
+    #endif
 
 }

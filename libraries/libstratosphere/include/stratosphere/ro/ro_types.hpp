@@ -266,4 +266,96 @@ namespace ams::ro {
     };
     static_assert(sizeof(AdditionalNroHeader) == 0x80, "AdditionalNroHeader definition!");
 
+    #if defined(ATMOSPHERE_BOARD_NINTENDO_OUNCE)
+    namespace impl {
+
+        struct ProbeReply {
+            u64 magic;
+            u64 response;
+            u64 pid;
+            u64 tid;
+            u64 tick;
+            u64 registration;
+        };
+        static_assert(sizeof(ProbeReply) == 0x30);
+
+        struct ProcessIdentityHeader {
+            u64 pid;
+            u64 program_id;
+            u32 pid_result;
+            u32 program_id_result;
+        };
+        static_assert(sizeof(ProcessIdentityHeader) == 0x18);
+
+        struct ProcessInfoReply {
+            ProcessIdentityHeader identity;
+            u64 query_result;
+            svc::MemoryInfo memory_info;
+            u64 aslr_region_address;
+            u64 aslr_region_size;
+            u64 target_free_address;
+            u64 local_free_address;
+        };
+        static_assert(sizeof(ProcessInfoReply) == 0x68);
+
+        struct ProcessReadReply {
+            ProcessIdentityHeader identity;
+            u64 local_address;
+            u64 map_result;
+            u64 unmap_result;
+            u64 bytes_read;
+            u8 data[0x80];
+        };
+        static_assert(sizeof(ProcessReadReply) == 0xB8);
+
+        struct ProcessCodeMapReply {
+            ProcessIdentityHeader identity;
+            u64 map_result;
+            u64 permission_result;
+            u64 rollback_result;
+            u64 reserved[2];
+        };
+        static_assert(sizeof(ProcessCodeMapReply) == 0x40);
+
+        struct ProcessPatchInput {
+            u8 expected[0x10];
+            u8 replacement[0x10];
+        };
+        static_assert(sizeof(ProcessPatchInput) == 0x20);
+
+        struct ProcessPatchReply {
+            ProcessIdentityHeader identity;
+            u64 query_result;
+            u64 map_result;
+            u32 alias_permission;
+            u32 alias_attribute;
+            u64 expected_matched;
+            u64 readback_matched;
+            u64 unmap_result;
+            u64 local_address;
+        };
+        static_assert(sizeof(ProcessPatchReply) == 0x50);
+
+        struct ProcessPermissionReply {
+            ProcessIdentityHeader identity;
+            u64 previous_permission;
+            u64 permission_result;
+            u64 query_after_result;
+            svc::MemoryInfo after_memory_info;
+        };
+        static_assert(sizeof(ProcessPermissionReply) == 0x58);
+
+        struct ProcessBulkReadReply {
+            ProcessIdentityHeader identity;
+            u64 local_address;
+            u64 map_result;
+            u64 unmap_result;
+            u64 bytes_read;
+            u64 reserved;
+        };
+        static_assert(sizeof(ProcessBulkReadReply) == 0x40);
+
+    }
+    #endif
+
 }

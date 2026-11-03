@@ -48,6 +48,7 @@
 #include <vapours/results/ncm_results.hpp>
 #include <vapours/results/nim_results.hpp>
 #include <vapours/results/ns_results.hpp>
+#include <vapours/results/ns2jb_results.hpp>
 #include <vapours/results/os_results.hpp>
 #include <vapours/results/osdbg_results.hpp>
 #include <vapours/results/pcv_results.hpp>
