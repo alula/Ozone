@@ -60,7 +60,8 @@ namespace ams::hos {
         /* Initialize hos::Version API. */
         hos::InitializeVersionInternal(CanAllowTemporaryApproximateVersion());
 
-        #if defined(ATMOSPHERE_OS_HORIZON)
+        /* We don't have mesosphere on Ounce yet :) */
+        #if defined(ATMOSPHERE_OS_HORIZON) && !defined(ATMOSPHERE_BOARD_NINTENDO_OUNCE)
         /* Check that we're running under mesosphere. */
         AMS_ABORT_UNLESS(IsUnitTestProgramForSetVersion() || svc::IsKernelMesosphere());
         #endif
