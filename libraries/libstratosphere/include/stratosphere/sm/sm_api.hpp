@@ -27,6 +27,9 @@ namespace ams::sm {
     /* Ordinary SM API. */
     Result GetServiceHandle(os::NativeHandle *out, ServiceName name);
     Result RegisterService(os::NativeHandle *out, ServiceName name, size_t max_sessions, bool is_light);
+    #if defined(ATMOSPHERE_BOARD_NINTENDO_OUNCE)
+    Result RegisterServiceInSpace(os::NativeHandle *out, u32 space, ServiceName name, size_t max_sessions, bool is_light);
+    #endif
     Result UnregisterService(ServiceName name);
 
     /* Atmosphere extensions. */
