@@ -223,7 +223,11 @@ namespace ams::spl {
         DeviceId                      = 8,
         BootReason                    = 9,
         MemoryMode                    = 10,
+        #if defined(ATMOSPHERE_BOARD_NINTENDO_OUNCE)
+        IsDevelopmentFunctionEnabled  = 21,
+        #else
         IsDevelopmentFunctionEnabled  = 11,
+        #endif
         KernelConfiguration           = 12,
         IsChargerHiZModeEnabled       = 13,
         RetailInteractiveDisplayState = 14,
