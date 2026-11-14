@@ -28,6 +28,9 @@ namespace ams {
                 PortIndex_DebugMonitor,
                 PortIndex_User,
                 PortIndex_JitPlugin,
+                #if defined(ATMOSPHERE_BOARD_NINTENDO_OUNCE)
+                PortIndex_UserSpace2,
+                #endif
                 PortIndex_Count,
             };
 
@@ -41,7 +44,12 @@ namespace ams {
             constexpr sm::ServiceName JitPluginServiceName = sm::ServiceName::Encode("ro:1");
             constexpr size_t          JitPluginMaxSessions = 2;
 
+            #if defined(ATMOSPHERE_BOARD_NINTENDO_OUNCE)
+            static constexpr size_t MaxSessions = DebugMonitorMaxSessions + UserMaxSessions * 2 + JitPluginMaxSessions;
+            #else
             static constexpr size_t MaxSessions = DebugMonitorMaxSessions + UserMaxSessions + JitPluginMaxSessions;
+            #endif
+
 
             using ServerOptions = sf::hipc::DefaultServerManagerOptions;
 
@@ -53,7 +61,7 @@ namespace ams {
             using Allocator     = sf::ExpHeapAllocator;
             using ObjectFactory = sf::ObjectFactory<sf::ExpHeapAllocator::Policy>;
 
-            alignas(0x40) constinit u8 g_server_allocator_buffer[4_KB];
+            alignas(0x40) constinit u8 g_server_allocator_buffer[8_KB];
             lmem::HeapHandle g_server_heap_handle;
             Allocator g_server_allocator;
 
@@ -63,6 +71,9 @@ namespace ams {
                 switch (port_index) {
                     case PortIndex_DebugMonitor:
                         R_RETURN(this->AcceptImpl(server, ObjectFactory::CreateSharedEmplaced<ro::impl::IDebugMonitorInterface, ro::DebugMonitorService>(std::addressof(g_server_allocator))));
+                    #if defined(ATMOSPHERE_BOARD_NINTENDO_OUNCE)
+                    case PortIndex_UserSpace2:
+                    #endif
                     case PortIndex_User:
                         R_RETURN(this->AcceptImpl(server, ObjectFactory::CreateSharedEmplaced<ro::impl::IRoInterface, ro::RoService>(std::addressof(g_server_allocator), ro::NrrKind_User)));
                     case PortIndex_JitPlugin:
@@ -88,14 +99,44 @@ namespace ams {
                 g_server_heap_handle = lmem::CreateExpHeap(g_server_allocator_buffer, sizeof(g_server_allocator_buffer), lmem::CreateOption_None);
             }
 
+            #if defined(ATMOSPHERE_BOARD_NINTENDO_OUNCE)
+            void RegisterServerInSpace(int port_index, u32 space, sm::ServiceName name, size_t max_sessions) {
+                Handle port = INVALID_HANDLE;
+                
+                // While ns2jb is replacing the original RO process, the services might still registered. We wait for them to unregister before registering them ourselves.
+                while (true) {
+                    Result result = sm::RegisterServiceInSpace(std::addressof(port), space, name, max_sessions, false);
+
+                    if (R_SUCCEEDED(result)) {
+                        break;
+                    }
+                    
+                    if (!sm::ResultAlreadyRegistered::Includes(result)) {
+                        R_ABORT_UNLESS(result);
+                    }
+
+                    os::SleepThread(TimeSpan::FromMilliSeconds(1));
+                }
+
+                ro::g_server_manager.RegisterServer(port_index, port);
+            }
+            #endif
+
             void LoopServer() {
                 /* Create services. */
+                #if defined(ATMOSPHERE_BOARD_NINTENDO_OUNCE)
+                RegisterServerInSpace(PortIndex_DebugMonitor, 1, DebugMonitorServiceName, DebugMonitorMaxSessions);
+                RegisterServerInSpace(PortIndex_User, 1, UserServiceName, UserMaxSessions);
+                RegisterServerInSpace(PortIndex_JitPlugin, 1, JitPluginServiceName, JitPluginMaxSessions);
+                RegisterServerInSpace(PortIndex_UserSpace2, 2, UserServiceName, UserMaxSessions);
+                #else
                 R_ABORT_UNLESS(ro::g_server_manager.RegisterServer(PortIndex_DebugMonitor, DebugMonitorServiceName, DebugMonitorMaxSessions));
 
                 R_ABORT_UNLESS(ro::g_server_manager.RegisterServer(PortIndex_User, UserServiceName, UserMaxSessions));
                 if (hos::GetVersion() >= hos::Version_7_0_0) {
                     R_ABORT_UNLESS(ro::g_server_manager.RegisterServer(PortIndex_JitPlugin, JitPluginServiceName, JitPluginMaxSessions));
                 }
+                #endif
 
                 /* Loop forever, servicing our services. */
                 ro::g_server_manager.LoopProcess();
@@ -127,10 +168,10 @@ namespace ams {
             #if defined(ATMOSPHERE_BOARD_NINTENDO_NX)
             /* Mount the SD card. */
             R_ABORT_UNLESS(fs::MountSdCard("sdmc"));
-            #endif
-
+            
             /* Verify that we can sanely execute. */
             ams::CheckApiVersion();
+            #endif
         }
 
         void FinalizeSystemModule() { /* ... */ }
