@@ -191,7 +191,9 @@ namespace ams {
         /* Initialize Debug config. */
         {
             spl::Initialize();
+            #if !defined(ATMOSPHERE_BOARD_NINTENDO_OUNCE)
             ON_SCOPE_EXIT { spl::Finalize(); };
+            #endif
 
             ro::SetDevelopmentHardware(spl::IsDevelopment());
             ro::SetDevelopmentFunctionEnabled(spl::IsDevelopmentFunctionEnabled());
