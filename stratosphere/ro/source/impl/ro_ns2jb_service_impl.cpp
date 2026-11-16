@@ -15,7 +15,6 @@
  */
 #include <stratosphere.hpp>
 #include "ro_ns2jb_service_impl.hpp"
-#include "ro_random.hpp"
 
 namespace ams::ro::impl {
 
@@ -202,18 +201,23 @@ namespace ams::ro::impl {
         R_UNLESS(length <= sizeof(out->data),                ns2jb::ResultInvalidArgument());
         R_UNLESS(page_offset + length <= os::MemoryPageSize, ns2jb::ResultInvalidArgument());
 
-        /* Map the target page into our address space. */
-        void *mapped_memory = nullptr;
-        R_TRY(os::MapProcessMemory(std::addressof(mapped_memory), process_h, page, os::MemoryPageSize, GenerateSecureRandom));
-        ON_SCOPE_EXIT { os::UnmapProcessMemory(mapped_memory, process_h, page, os::MemoryPageSize); };
+        /* Map the target page at the first free address in our address space. */
+        u64 local = 0;
+        R_TRY(FindFreeAddress(std::addressof(local), os::GetCurrentProcessHandle(), os::MemoryPageSize));
+        R_UNLESS(local != 0, ns2jb::ResultInvalidMemoryState());
+        out->local_address = local;
+
+        const Result map_res = svc::MapProcessMemory(local, process_h, page, os::MemoryPageSize);
+        out->map_result = map_res.GetValue();
+        R_TRY(map_res);
 
         /* Copy the requested bytes. */
-        std::memcpy(out->data, static_cast<const u8 *>(mapped_memory) + page_offset, length);
+        std::memcpy(out->data, reinterpret_cast<const u8 *>(local) + page_offset, length);
+        out->bytes_read   = length;
+        const Result unmap_res = svc::UnmapProcessMemory(local, process_h, page, os::MemoryPageSize);
+        out->unmap_result = unmap_res.GetValue();
 
-        out->local_address = reinterpret_cast<u64>(mapped_memory);
-        out->bytes_read    = length;
-
-        R_SUCCEED();
+        R_RETURN(unmap_res);
     }
 
     Result MapProcessCodeMemory(ProcessCodeMapReply *out, os::NativeHandle process_h, os::ProcessId process_id, u64 source, u64 destination, u64 size) {
@@ -277,13 +281,18 @@ namespace ams::ro::impl {
         R_UNLESS(info.attribute == 0,                                    ns2jb::ResultInvalidMemoryState());
         R_UNLESS(address + size <= info.base_address + info.size,        ns2jb::ResultInvalidMemoryState());
 
-        /* Map the target code page into our address space. */
-        void *mapped_memory = nullptr;
-        R_TRY(os::MapProcessMemory(std::addressof(mapped_memory), process_h, page, os::MemoryPageSize, GenerateSecureRandom));
-        ON_SCOPE_EXIT { os::UnmapProcessMemory(mapped_memory, process_h, page, os::MemoryPageSize); };
+        /* Map the target code page at the first free address in our address space. */
+        u64 local = 0;
+        R_TRY(FindFreeAddress(std::addressof(local), os::GetCurrentProcessHandle(), os::MemoryPageSize));
+        R_UNLESS(local != 0, ns2jb::ResultInvalidMemoryState());
+        out->local_address = local;
+
+        const Result map_res = svc::MapProcessMemory(local, process_h, page, os::MemoryPageSize);
+        out->map_result = map_res.GetValue();
+        R_TRY(map_res);
+        ON_SCOPE_EXIT { out->unmap_result = svc::UnmapProcessMemory(local, process_h, page, os::MemoryPageSize).GetValue(); };
 
         /* Validate that we received a writable alias. */
-        const uintptr_t local = reinterpret_cast<uintptr_t>(mapped_memory);
         svc::MemoryInfo alias = {};
         svc::PageInfo page_info = {};
         R_TRY(svc::QueryMemory(std::addressof(alias), std::addressof(page_info), local));
@@ -291,7 +300,7 @@ namespace ams::ro::impl {
         R_UNLESS(alias.attribute == 0,                                ns2jb::ResultInvalidMemoryState());
 
         /* Verify the expected bytes. */
-        u8 *mapped = static_cast<u8 *>(mapped_memory) + page_offset;
+        u8 *mapped = reinterpret_cast<u8 *>(local) + page_offset;
         R_UNLESS(std::memcmp(mapped, patch.expected, size) == 0, ns2jb::ResultPatchExpectedMismatch());
 
         /* Write the replacement and publish the new instructions. */
@@ -301,7 +310,6 @@ namespace ams::ro::impl {
         /* TODO: codex's overly defensive garbage? */
         R_UNLESS(std::memcmp(mapped, patch.replacement, size) == 0, ns2jb::ResultPatchReadbackMismatch());
 
-        out->local_address    = local;
         out->alias_permission = static_cast<u32>(alias.permission);
         out->alias_attribute  = static_cast<u32>(alias.attribute);
         out->expected_matched = 1;
@@ -359,19 +367,24 @@ namespace ams::ro::impl {
         R_UNLESS(info.state == svc::MemoryState_Code || info.state == svc::MemoryState_CodeData,   ns2jb::ResultInvalidMemoryState());
         R_UNLESS(info.attribute == 0,                                                              ns2jb::ResultInvalidMemoryState());
 
-        /* Map the requested page range into our address space. */
+        /* Map the requested page range at the first free address in our address space. */
         const u64 map_size = util::AlignUp(page_offset + length, os::MemoryPageSize);
-        void *mapped_memory = nullptr;
-        R_TRY(os::MapProcessMemory(std::addressof(mapped_memory), process_h, page, map_size, GenerateSecureRandom));
-        ON_SCOPE_EXIT { os::UnmapProcessMemory(mapped_memory, process_h, page, map_size); };
+        u64 local = 0;
+        R_TRY(FindFreeAddress(std::addressof(local), os::GetCurrentProcessHandle(), map_size));
+        R_UNLESS(local != 0, ns2jb::ResultInvalidMemoryState());
+        out->local_address = local;
+
+        const Result map_res = svc::MapProcessMemory(local, process_h, page, map_size);
+        out->map_result = map_res.GetValue();
+        R_TRY(map_res);
 
         /* Copy the requested bytes to the caller's receive buffer. */
-        std::memcpy(receive_buf, static_cast<const u8 *>(mapped_memory) + page_offset, length);
+        std::memcpy(receive_buf, reinterpret_cast<const u8 *>(local) + page_offset, length);
+        out->bytes_read   = length;
+        const Result unmap_res = svc::UnmapProcessMemory(local, process_h, page, map_size);
+        out->unmap_result = unmap_res.GetValue();
 
-        out->local_address = reinterpret_cast<u64>(mapped_memory);
-        out->bytes_read    = length;
-
-        R_SUCCEED();
+        R_RETURN(unmap_res);
     }
     #endif
 

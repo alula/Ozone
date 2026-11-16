@@ -21,7 +21,12 @@ namespace ams::ro::impl {
     u64 GenerateSecureRandom(u64 max) {
         /* Generate a cryptographically random number. */
         u64 rand;
+
+        #if defined(ATMOSPHERE_BOARD_NINTENDO_OUNCE)
+        R_DISCARD(spl::GenerateRandomBytes(std::addressof(rand), sizeof(rand)));
+        #else
         crypto::GenerateCryptographicallyRandomBytes(std::addressof(rand), sizeof(rand));
+        #endif
 
         /* Coerce into range. */
         return rand % (max + 1);

@@ -54,6 +54,12 @@ namespace ams::sm {
         R_RETURN(smRegisterService(out, impl::ConvertName(name), is_light, static_cast<int>(max_sessions)));
     }
 
+    #if defined(ATMOSPHERE_BOARD_NINTENDO_OUNCE)
+    Result RegisterServiceInSpace(os::NativeHandle *out, u32 space, ServiceName name, size_t max_sessions, bool is_light) {
+        R_RETURN(smRegisterServiceInSpace(out, space, impl::ConvertName(name), is_light, static_cast<int>(max_sessions)));
+    }
+    #endif
+
     Result UnregisterService(ServiceName name) {
         R_RETURN(smUnregisterService(impl::ConvertName(name)));
     }
